@@ -54,7 +54,7 @@ if __name__ == "__main__":
     #   
     #   dir_origin_path和dir_save_path仅在mode='dir_predict'时有效
     # -------------------------------------------------------------------------#
-    origin_path = "input\\"+os.listdir("input")[0]
+    origin_path = "input\\"
     dir_save_path = "result\\"
     temp_path = "temp\\"
     temp_save_path = "temp_save\\"
@@ -69,7 +69,9 @@ if __name__ == "__main__":
     import process
     import shutil
 
-    img_h, img_w = process.cut(origin_path, temp_path)
+for filename in os.listdir(origin_path):
+    name = origin_path + filename  ###图片名字
+    img_h, img_w = process.cut(name, temp_path)
 
     img_names = os.listdir(temp_path)
     for img_name in tqdm(img_names):
@@ -80,10 +82,13 @@ if __name__ == "__main__":
             r_image = unet.detect_image(image, True)
             if not os.path.exists(temp_save_path):
                 os.makedirs(temp_save_path)
-            # else:
-            #     shutil.rmtree(dir_save_path)
-            #     os.makedirs(dir_save_path)
             r_image.save(os.path.join(temp_save_path, img_name), quality=95)
+
+    shutil.rmtree(temp_path)
+    if not os.path.exists(dir_save_path):
+        os.makedirs(dir_save_path)
+    process.Mosaic(temp_save_path, dir_save_path, 512, 0, img_h, img_w)
+    shutil.rmtree(temp_save_path)
 
     print('-' * 63)
     print("|%25s | %15s | %15s|" % ("Key", "Value", "Ratio"))
@@ -95,8 +100,3 @@ if __name__ == "__main__":
             print("|%25s | %15s | %14.2f%%|" % (str(name_classes[i]), str(classes_nums[i]), ratio))
             print('-' * 63)
     # print("classes_nums:", classes_nums)
-    shutil.rmtree(temp_path)
-    if not os.path.exists(dir_save_path):
-        os.makedirs(dir_save_path)
-    process.Mosaic(temp_save_path, dir_save_path, 512, 0, img_h, img_w)
-    shutil.rmtree(temp_save_path)
