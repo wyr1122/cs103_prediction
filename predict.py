@@ -69,26 +69,25 @@ if __name__ == "__main__":
     import process
     import shutil
 
-for filename in os.listdir(origin_path):
-    name = origin_path + filename  ###图片名字
-    img_h, img_w = process.cut(name, temp_path)
+    for filename in os.listdir(origin_path):
+        name = origin_path + filename  ###图片名字
+        img_h, img_w = process.cut(name, temp_path)
 
-    img_names = os.listdir(temp_path)
-    for img_name in tqdm(img_names):
-        if img_name.lower().endswith(
-                ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
-            image_path = os.path.join(temp_path, img_name)
-            image = Image.open(image_path)
-            r_image = unet.detect_image(image, True)
-            if not os.path.exists(temp_save_path):
-                os.makedirs(temp_save_path)
-            r_image.save(os.path.join(temp_save_path, img_name), quality=95)
-
-    shutil.rmtree(temp_path)
-    if not os.path.exists(dir_save_path):
-        os.makedirs(dir_save_path)
-    process.Mosaic(temp_save_path, dir_save_path, 512, 0, img_h, img_w)
-    shutil.rmtree(temp_save_path)
+        img_names = os.listdir(temp_path)
+        for img_name in tqdm(img_names):
+            if img_name.lower().endswith(
+                    ('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
+                image_path = os.path.join(temp_path, img_name)
+                image = Image.open(image_path)
+                r_image = unet.detect_image(image, True)
+                if not os.path.exists(temp_save_path):
+                    os.makedirs(temp_save_path)
+                r_image.save(os.path.join(temp_save_path, img_name), quality=95)
+        shutil.rmtree(temp_path)
+        if not os.path.exists(dir_save_path):
+            os.makedirs(dir_save_path)
+        process.Mosaic(temp_save_path, dir_save_path, 512, 0, img_h, img_w, filename)
+        shutil.rmtree(temp_save_path)
 
     print('-' * 63)
     print("|%25s | %15s | %15s|" % ("Key", "Value", "Ratio"))

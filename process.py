@@ -65,7 +65,7 @@ def get_data(path_name):
     return T1
 
 
-def Mosaic(Path, Save_Path, CropSize, RepetitionSize, height, width):
+def Mosaic(Path, Save_Path, CropSize, RepetitionSize, height, width, name):
     # height = 6344
     # width = 10704
     rows = height // CropSize
@@ -102,7 +102,7 @@ def Mosaic(Path, Save_Path, CropSize, RepetitionSize, height, width):
     (width - CropSize): width] = imgs[n]
     result1 = result.astype(np.uint8)
     image = Image.fromarray(cv2.cvtColor(result1, cv2.COLOR_BGR2RGB))
-    image.save(Save_Path + 'result.jpg')
+    image.save(Save_Path + name)
     # m = (rows + rem_rows) * (cols + rem_cols)
     # for n in range(m):
     #     path = os.path.join(Path, os.listdir(Path)[0])
